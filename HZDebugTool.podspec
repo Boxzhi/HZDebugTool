@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   s.name = 'HZDebugTool'
   s.version = '1.0.0'
   s.summary = 'Development tool'
-  s.homepage = 'https://github.com/Boxzhi/HZNavigationBar'
+  s.homepage = 'https://github.com/Boxzhi/HZDebugTool'
   s.author = { 'HeZhizhi' => 'coderhzz@163.com' }
   s.license = { :type => 'MIT', :file => 'LICENSE' }
   s.social_media_url = 'https://www.jianshu.com/u/9767e7dda727'
