@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name = 'HZDebugTool'
-  s.version = '1.0.0'
+  s.version = '1.0.1'
   s.summary = 'Development tool'
   s.homepage = 'https://github.com/Boxzhi/HZDebugTool'
   s.author = { 'HeZhizhi' => 'coderhzz@163.com' }
@@ -13,8 +13,16 @@ Pod::Spec.new do |s|
   s.source_files = 'HZDebugTool/*.swift'
   s.framework = 'UIKit'
   s.swift_version = '5.0'
-  s.dependency 'SnapKit'
-  s.source_files = 'Core/*.swift', 'Extensions/*.swift', 'SAMKeychain/*.{bundle,h,m}'
-  s.resources = 'Core/*.{png,bundle}', 'SAMKeychain/*.{png,bundle}'
+
+  s.subspec 'Core' do |core|
+    core.dependency 'SnapKit'
+    core.source_files = 'Core/*.swift', 'Extensions/*.swift'
+    core.resources = 'Core/*.{png,bundle}'
+  end
+
+  s.subspec 'SAMKeychain' do |keychain|
+    keychain.source_files = 'SAMKeychain/*.{h,m,swift}'
+    keychain.resources = 'SAMKeychain/*.{png,bundle}'
+  end
 
 end
