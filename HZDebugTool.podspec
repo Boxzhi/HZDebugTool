@@ -16,6 +16,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'Core' do |core|
     core.dependency 'SnapKit'
+    core.dependency 'SAMKeychain'
     core.source_files = 'Core/*.swift', 'Extensions/*.swift'
     core.resources = 'Core/*.{png,bundle}'
   end
