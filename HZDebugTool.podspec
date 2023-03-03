@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.social_media_url = 'https://www.jianshu.com/u/9767e7dda727'
   s.source = { :git => "https://github.com/Boxzhi/HZDebugTool.git", :tag => s.version }
 
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '11.0'
   s.source_files = 'HZDebugTool/*.swift'
   s.framework = 'UIKit'
   s.swift_version = '5.0'
