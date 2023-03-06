@@ -34,12 +34,12 @@ public protocol HZDebugToolDelegate: AnyObject {
     
     /// 选择的登录账号
     func debugToolSelectAccount(_ accountType: String, account: String, password: String, loginSuccessHandler: @escaping () -> Void) -> Void
-    
-    /// 删除账号
-    func debugToolDeleteAccount(_ accountType: String, account: String, password: String, deleteSuccessHandler: @escaping () -> Void) -> Void
-    
+        
     /// token登录
     func debugToolInputToken(_ token: String) -> Void
+    
+    /// 测试itemcell点击
+    func debugToolDidTestItem(_ row: Int, string: String?) -> Void
     
     /// 自定义itemcell
     func debugToolOfCustomItem() -> [String: [(String, String)]]
@@ -57,14 +57,26 @@ public struct HZDebugTool {
     public static weak var delegate: HZDebugToolDelegate?
     
     public var themeColor: UIColor = UIColor(red: 73.0/255.0, green: 79.0/255.0, blue: 244.0/255.0, alpha: 1.0)
+    
+    /// 是否始终以debugToolOfLoginAccounts的账号为准
+    public var isAlwaysDelegateAccount: Bool = false
         
-    public static var `default`: HZDebugTool { return HZDebugTool() }
+    public static var `default`: HZDebugTool = HZDebugTool()
     
     public static func openDebugTool(_ delegate: HZDebugToolDelegate) {
         #if DEBUG
         self.delegate = delegate
         UIApplication.shared.keyWindow?.rootViewController?.present(HZNavigationController(rootViewController: HZHomeViewController()), animated: true)
         #endif
+    }
+    
+    /// 添加账号
+    /// - Parameters:
+    ///   - environment: 环境
+    ///   - account: 账号
+    ///   - password: 密码
+    public static func addOrDeleteAccount(_ environment: String, account: String, password: String) {
+        HZAccountListViewController.addOrDeleteAccount(environment, account: account, password: password)
     }
     
 }

@@ -70,6 +70,14 @@ class HZHomeViewController: HZBaseViewController {
             HZDebugTool.delegate?.debugToolDidCustomItem(self.tableViewData[indexPath.section].0, cellData: self.tableViewData[indexPath.section].1[indexPath.row], row: indexPath.row, didSuccessHandler: {
                 self.reloadData()
             })
+        }else if cellType == .testItem {
+            if indexPath.row == 0 {
+                HZDebugTool.delegate?.debugToolDidTestItem(indexPath.row, string: nil)
+            }else if indexPath.row == 1 {
+                HZAlertController.showInputBox("输入要测试的H5地址", title: "", placeholder: "H5地址", confirmButtonTitle: "点击跳转") { string in
+                    HZDebugTool.delegate?.debugToolDidTestItem(indexPath.row, string: string)
+                }
+            }
         }
     }
     

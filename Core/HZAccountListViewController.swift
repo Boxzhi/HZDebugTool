@@ -10,7 +10,16 @@ import UIKit
 class HZAccountListViewController: HZBaseViewController {
     
     fileprivate var loginAccounts: [String: [String: String]]? {
-        return HZDebugTool.delegate?.debugToolOfLoginAccounts()
+        if let _accounts = HZKeychainTool.getContentFromKeyChain(service: "HZDebugTool", account: "DebugToolAccounts"), let _accountsDic = _accounts.toDictionary() as? [String: [String: String]], HZDebugTool.default.isAlwaysDelegateAccount == false {
+            return _accountsDic
+        }else if let _loginAccounts = HZDebugTool.delegate?.debugToolOfLoginAccounts() {
+            if let _loginAccountString = _loginAccounts.toJsonString(), HZDebugTool.default.isAlwaysDelegateAccount == false {
+                let _ = HZKeychainTool.saveContentFromKeyChain(content: _loginAccountString, service: "HZDebugTool", account: "DebugToolAccounts")
+            }
+            return _loginAccounts
+        }else {
+            return nil
+        }
     }
 
     override func viewDidLoad() {
@@ -57,6 +66,7 @@ class HZAccountListViewController: HZBaseViewController {
             HZDebugAccountAlertView.showAccountAlertView { account, password, environment in
                 if let _account = account, let _password = password {
                     HZDebugTool.delegate?.debugToolSelectAccount(environment, account: _account, password: _password, loginSuccessHandler: {
+                        HZAccountListViewController.addOrDeleteAccount(environment, account: _account, password: _password)
                         self.reloadData()
                     })
                 }
@@ -64,6 +74,7 @@ class HZAccountListViewController: HZBaseViewController {
         }else if cellType == .accountList, let _account = cellData as? String {
             if let _loginAccounts = loginAccounts?[self.tableViewData[indexPath.section].0], let _password = _loginAccounts[_account] {
                 HZDebugTool.delegate?.debugToolSelectAccount(self.tableViewData[indexPath.section].0, account: _account, password: _password, loginSuccessHandler: {
+                    HZAccountListViewController.addOrDeleteAccount(self.tableViewData[indexPath.section].0, account: _account, password: _password)
                     self.reloadData()
                 })
             }
@@ -74,10 +85,37 @@ class HZAccountListViewController: HZBaseViewController {
         if editingStyle == .delete {
             let type = self.tableViewData[indexPath.section].0
             if let _account = self.tableViewData[indexPath.section].1[indexPath.row] as? String, let _accounts = loginAccounts?[type], let _password = _accounts[_account] {
-                HZDebugTool.delegate?.debugToolDeleteAccount(type, account: _account, password: _password, deleteSuccessHandler: {
-                    self.reloadData()
-                })
+                HZAccountListViewController.addOrDeleteAccount(type, account: _account, password: _password, isAdd: false)
+                self.reloadData()
             }
+        }
+    }
+    
+    static func addOrDeleteAccount(_ environment: String, account: String, password: String, isAdd: Bool = true) {
+        var typeTemp: [String: [String: String]] = [:]
+        if let _debugAccounts = HZKeychainTool.getContentFromKeyChain(service: "HZDebugTool", account: "DebugToolAccounts")?.toDictionary() as? [String: [String: String]] {
+            _debugAccounts.forEach { typeKeyValue in
+                if typeKeyValue.key.contains(environment) {
+                    var apTemp = typeKeyValue.value
+                    apTemp.removeValue(forKey: account)
+                    if isAdd {
+                        apTemp[account] = password
+                    }
+                    typeTemp[typeKeyValue.key] = apTemp
+                }else {
+                    typeTemp[typeKeyValue.key] = typeKeyValue.value
+                }
+            }
+        }else if isAdd, let _environments = HZDebugTool.delegate?.debugToolOfRequestEnvironments() {
+            _environments.forEach { _environment in
+                if environment.contains(_environment) {
+                    let key = environment.contains("账号") ? environment : "\(environment)账号"
+                    typeTemp[key] = [account: password]
+                }
+            }
+        }
+        if let _string = typeTemp.toJsonString() {
+            let _ = HZKeychainTool.saveContentFromKeyChain(content: _string, service: "HZDebugTool", account: "DebugToolAccounts")
         }
     }
     

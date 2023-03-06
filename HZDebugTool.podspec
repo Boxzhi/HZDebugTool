@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name = 'HZDebugTool'
-  s.version = '1.0.1'
+  s.version = '1.0.2'
   s.summary = 'Development tool'
   s.homepage = 'https://github.com/Boxzhi/HZDebugTool'
   s.author = { 'HeZhizhi' => 'coderhzz@163.com' }

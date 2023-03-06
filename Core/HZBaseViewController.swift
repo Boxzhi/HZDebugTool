@@ -193,7 +193,7 @@ extension HZBaseViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return HZDebugHeaderView(titleString: self.tableViewData[section].0)
+        return self.tableViewData[section].1.count > 0 ? HZDebugHeaderView(titleString: self.tableViewData[section].0) : nil
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -217,7 +217,7 @@ extension HZBaseViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 35.0
+        return self.tableViewData[section].1.count > 0 ? 35.0 : 0.01
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -246,7 +246,7 @@ fileprivate class HZDebugHeaderView: UIView {
     }
 
     fileprivate func setUI() {
-        self.backgroundColor = UIColor(red: 73.0/255.0, green: 79.0/255.0, blue: 244.0/255.0, alpha: 1.0)
+        self.backgroundColor = HZDebugTool.default.themeColor
         let label = UILabel()
         label.text = self.titleString
         label.textColor = .white
